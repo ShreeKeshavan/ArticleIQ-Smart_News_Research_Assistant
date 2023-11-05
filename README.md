@@ -13,13 +13,13 @@
 <p>Clone the repository to your local machine:</p>
 
 ```bash
-git clone https://github.com/your_username/ArticleIQ.git
+git clone https://github.com/ShreeKeshavan/ArticleIQ-Smart_News_Research_Assistant.git
 ```
 
 <p>Navigate to the project directory and install the required packages:</p>
 
 ```bash
-cd ArticleIQ
+cd ArticleIQ-Smart_News_Research_Assistant
 pip install -r requirements.txt
 ```
 
