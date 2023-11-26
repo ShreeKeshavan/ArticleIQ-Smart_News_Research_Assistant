@@ -1,7 +1,7 @@
 <h1>ArticleIQ - Smart News Research Assistant</h1>
 
 <h2>Introduction</h2>
-<p>ArticleIQ is a Smart News Research Assistant application designed to streamline the process of finding answers to your queries from the content of provided articles. The application is built using the Langchain, Streamlit framework and makes use of the powerful OpenAI model for information retrieval and question-answering tasks.</p>
+<p>ArticleIQ is a Smart News Research Assistant application designed to streamline the process of finding answers to your queries from the content of provided articles. The application is built using the Langchain, Streamlit framework and makes use of the powerful OpenAI model for information retrieval, question-answering and summarizing tasks.</p>
 
 <h2>Getting Started</h2>
 <p>Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.</p>
