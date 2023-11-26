@@ -1,46 +1,87 @@
-<h1>ArticleIQ - Smart News Research Assistant</h1>
+# ArticleIQ - Smart News Research Assistant 🔍
 
-<h2>Introduction</h2>
-<p>ArticleIQ is a Smart News Research Assistant application designed to streamline the process of finding answers to your queries from the content of provided articles. The application is built using the Langchain, Streamlit framework and makes use of the powerful OpenAI model for information retrieval, question-answering and summarizing tasks.</p>
+ArticleIQ is an AI-powered tool designed to assist with researching and analyzing news articles. By leveraging state-of-the-art language models, Langchain and vector search technology, ArticleIQ provides insightful answers to your questions based on the content of the provided news articles.
 
-<h2>Getting Started</h2>
-<p>Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.</p>
+## Project Description
 
-<h3>Prerequisites</h3>
-<p>Make sure you have Python installed on your machine. You can download Python <a href="https://www.python.org/">here</a>.</p>
+ArticleIQ utilizes Streamlit to create an interactive web interface where users can input URLs of news articles they want to analyze. It processes the text of these articles using the LangChain library, which includes components such as OpenAI for language modeling, UnstructuredURLLoader for data loading, RecursiveCharacterTextSplitter for text splitting, and FAISS for vector storage and search. The tool creates vector embeddings with either OpenAI or HuggingFace's Instruct embeddings, and uses a retrieval-based question-answering system to provide users with precise answers and sources for further reading.
 
-<h2>Installation</h2>
-<p>Clone the repository to your local machine:</p>
+The main libraries and technologies used in this project include:
 
-```bash
+- Streamlit: For creating the interactive web interface.
+- LangChain: To facilitate the construction of the retrieval-based QA chain.
+- OpenAI: Providing access to powerful language models for text generation and embedding.
+- HuggingFace Transformers: For alternative language model embeddings if desired.
+- FAISS (Facebook AI Similarity Search): For efficient similarity search and retrieval of text chunks.
+- Python's Pickle: For saving and loading the FAISS vector index.
+- dotenv: For loading environment variables securely.
+
+## Installation Guide
+
+To set up ArticleIQ, you'll need Python 3.6 or higher. Follow these steps:
+
+1. Clone the repository:
+
+```python
 git clone https://github.com/ShreeKeshavan/ArticleIQ-Smart_News_Research_Assistant.git
 ```
 
 <p>Navigate to the project directory and install the required packages:</p>
 
-```bash
+```python
 cd ArticleIQ-Smart_News_Research_Assistant
 pip install -r requirements.txt
 ```
 
 <p>Run the Streamlit application:</p>
 
-```bash
+```python
 streamlit run main.py
 ```
 
-<p>The Streamlit app will open in your default web browser.</p>
+## Usage Instructions
 
-<h2>Usage</h2>
-<p>Upon running the application, you'll see an interface where you can input up to three article URLs for analysis.</p>
+To use ArticleIQ, follow these steps:
 
-<ul>
-<li>Enter the URLs of the articles in the sidebar.</li>
-<li>Click on the "Activate ArticleIQ" button. The application will start processing the articles - loading the data, splitting it into manageable chunks, embedding these chunks, and saving them to a FAISS index.</li>
-<li>Once processing is done, input your question in the 'Question:' field.</li>
-<li>The application will retrieve the most relevant answer to your question from the content of the articles provided.</li>
-</ul>
+1. Run the Streamlit application: streamlit run main.py
+2. Open your web browser and go to `localhost:8501` to view the app.
+3. Input the URLs of the news articles you want to analyze in the sidebar.
+4. Click "Activate ArticleIQ" to process the articles.
+5. Once processed, you can ask questions in the provided text field to get answers based on the articles' content.
 
+## Features
 
-<h2>License</h2>
-<p>This project is licensed under the Apache License 2.0- see the LICENSE.md file for details.</p>
+- Streamlit web interface for easy interaction.
+- Supports multiple news articles through URL input.
+- Vector embedding generation for efficient information retrieval.
+- Question-answering system with sources for in-depth research.
+
+## Examples
+
+Here's a short example of how to interact with ArticleIQ:
+
+1. Input URLs:
+- URL 1: `https://example.com/news-article-one`
+- URL 2: `https://example.com/news-article-two`
+
+2. Click "Activate ArticleIQ" to process the articles.
+
+3. Ask a question:
+- Input: "What are the main points discussed in the articles?"
+
+4. Receive an answer along with sources for further reading.
+
+## Documentation
+
+For more detailed information on the project's architecture and functions, please refer to the `ArticleIQ Project Documentation` folder in the repository.
+
+## License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
+
+## Contact Information
+
+For any questions or feedback, please contact us at:
+
+- Email: keshavansubramani@gmail.com
+- GitHub: [https://github.com/ShreeKeshavan/](https://github.com/ShreeKeshavan/)
