@@ -1,84 +1,97 @@
-# Import necessary libraries
 import os
 import streamlit as st
 import pickle
-import time
 from langchain import OpenAI
 from langchain.document_loaders import UnstructuredURLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.chains import RetrievalQAWithSourcesChain
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load data from URLs using the UnstructuredURLLoader
+def load_data(urls):
+    loader = UnstructuredURLLoader(urls=urls)
+    return loader.load()
 
-# Set up Streamlit interface
-st.markdown("## ArticleIQ - Smart News Research Assistant 🔍")
+# Split data into manageable chunks for processing
+def split_data(data):
+    text_splitter = RecursiveCharacterTextSplitter(
+        separators=['\n\n', '\n', '.', ','],
+        chunk_size=1000,
+        chunk_overlap=100)
+    return text_splitter.split_documents(data)
 
-# Set up sidebar for URL inputs
-st.sidebar.title("Articles URLs 👇")
-urls = []
-# Collect up to 3 URLs from the user
-for i in range(3):
-    url = st.sidebar.text_input(f"URL {i+1}")
-    urls.append(url)
-
-# Set up "Activate ArticleIQ" button
-activate_articleiq = st.sidebar.button("Activate ArticleIQ")
-# Set path for FAISS Vector Data pickle file
-file_path = 'FAISS_Vector_Data.pkl'
-
-# Create an empty Streamlit container for status display
-status_display = st.empty()
-# Initialize OpenAI model
-llm = OpenAI(temperature = 0.9, max_tokens = 500)
-
-# If "Activate ArticleIQ" button is clicked
-if activate_articleiq:
-    # Load data from URLs
-    loader = UnstructuredURLLoader(urls = urls)
-    status_display.text('Loading Data ⏳')
-    data = loader.load()
-        
-    # Split data into manageable chunks
-    status_display.text('Splitting Data ✂️')
-    text_splitter = RecursiveCharacterTextSplitter( separators= ['\n\n', '\n', '.', ','], chunk_size = 1000)
-    individual_chunks = text_splitter.split_documents(data)
-
-    # Embed chunks and save to FAISS index
+# Generate embeddings for the individual data chunks
+def embed_data(individual_chunks):
     embeddings = OpenAIEmbeddings()
-    vector_data = FAISS.from_documents(individual_chunks, embeddings)
-    status_display.text('Embedding Vectors 📥📤')
-    time.sleep(2)
+    # embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-xl")
+    return FAISS.from_documents(individual_chunks, embeddings)
 
-    # Save FAISS index to pickle file
+# Save the FAISS index to a file for later retrieval
+def save_faiss_index(file_path, vector_data):
     with open(file_path, "wb") as fp:
         pickle.dump(vector_data, fp)
 
-# Collect question from user
-question = status_display.text_input('Question: ')
-# If a question is entered
-if question:
-    # If FAISS index pickle file exists
-    if os.path.exists(file_path):
-        # Load FAISS index from pickle file
-        with open(file_path, 'rb') as fp:
-            vector_store = pickle.load(fp)
-            # Initialize retrieval chain
-            retrieval_chain = RetrievalQAWithSourcesChain.from_llm(llm = llm, retriever = vector_store.as_retriever())
-            # Find answer to question
-            final_output = retrieval_chain({"question": question}, return_only_outputs = True)
+# Load the FAISS index from the file
+def load_faiss_index(file_path):
+    with open(file_path, 'rb') as fp:
+        return pickle.load(fp)
 
-            # Display answer
+# Create a retrieval chain for question-answering using the vector store
+def retrieval_chain(llm, vector_store):
+    return RetrievalQAWithSourcesChain.from_llm(llm=llm, retriever=vector_store.as_retriever())
+
+# Use the retrieval chain to find and return an answer to a question, along with sources
+def find_answer(retrieval_chain, question):
+    return retrieval_chain({"question": question})  # Removed return_only_outputs=True
+
+def main():
+    load_dotenv()
+    
+    # Set up the Streamlit interface
+    st.markdown("## ArticleIQ - Smart News Research Assistant 🔍")
+
+    # To collect URLs from user input, increase the range as needed if more are required.
+    st.sidebar.title("Articles URLs 👇")
+    urls = [st.sidebar.text_input(f"URL {i+1}") for i in range(3)]
+    
+    activate_articleiq = st.sidebar.button("Activate ArticleIQ")
+    status_display = st.empty()
+    
+    file_path = 'FAISS_Vector_Data.pkl'
+    llm = OpenAI(temperature=0.7, max_tokens=500)  # "text-davinci-003"
+    
+    # If the button is clicked, start processing the URLs
+    if activate_articleiq:
+        data = load_data(urls)
+        status_display.text('Loading Data ⏳')
+        
+        individual_chunks = split_data(data)
+        status_display.text('Splitting Data ✂️')
+        
+        vector_data = embed_data(individual_chunks)
+        status_display.text('Embedding Vectors 📥📤')
+        
+        save_faiss_index(file_path, vector_data)
+        
+    # Allow the user to enter a question and get an answer
+    question = status_display.text_input('Question: ')
+    if question:
+        if os.path.exists(file_path):
+            vector_store = load_faiss_index(file_path)
+            retrieval_chain_obj = retrieval_chain(llm, vector_store)
+            final_output = find_answer(retrieval_chain_obj, question)
             st.header("IQ's Answer")
             st.write(final_output["answer"])
-
-            # Display sources if available
-            sources = final_output.get("Sources", "")
+            
+            # Display the sources for further reading
+            sources = final_output.get("sources", '')
             if sources:
                 st.subheader("Further reading:")
-                sources_list = sources.split("/n")
-                for source in sources_list:
-                    st.write(source)
+                sources_str = sources.split("\n") 
+                for source in sources_str:
+                    st.write(source)  
+
+if __name__ == "__main__":
+    main()
