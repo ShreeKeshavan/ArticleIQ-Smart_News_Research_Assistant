@@ -81,10 +81,3 @@ For more detailed information on the project's architecture and functions, pleas
 ## License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
-
-## Contact Information
-
-For any questions or feedback, please contact us at:
-
-- Email: keshavansubramani@gmail.com
-- GitHub: [https://github.com/ShreeKeshavan/](https://github.com/ShreeKeshavan/)
