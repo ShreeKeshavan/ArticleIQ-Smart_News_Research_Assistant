@@ -6,6 +6,9 @@ ArticleIQ is an AI-powered tool designed to assist with researching and analyzin
 
 ArticleIQ utilizes Streamlit to create an interactive web interface where users can input URLs of news articles they want to analyze. It processes the text of these articles using the LangChain library, which includes components such as OpenAI for language modeling, UnstructuredURLLoader for data loading, RecursiveCharacterTextSplitter for text splitting, and FAISS for vector storage and search. The tool creates vector embeddings with either OpenAI or HuggingFace's Instruct embeddings, and uses a retrieval-based question-answering system to provide users with precise answers and sources for further reading.
 
+## Technical Architecture
+![IMG_4234](https://github.com/ShreeKeshavan/ArticleIQ-Smart_News_Research_Assistant/assets/114231374/09624ebf-f1be-4f2e-89ab-b8e17c788d5a)
+
 **The main libraries and technologies used in this project include:**
 
 - Streamlit: For creating the interactive web interface.
